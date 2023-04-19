@@ -104,7 +104,7 @@ This assignment needs to use non-CNN-related packages such as numpy and SKLearn 
 
     \subsection{LeNet-5}
     The second question is to let us implement LeNet-5. LeNet-5 is a model proposed by Professor Yann LeCun in the paper Gradient-based learning applied to document recognition in 1998. It is the first convolution successfully applied to digital recognition problems.On the MNIST dataset, the LeNet-5 model can achieve an accuracy rate of about 99.2\%.
-    \indent First, let's briefly introduce the LeNet-5 model, the model has seven layer :
+    \indent First, let's briefly introduce the LeNet-5 model, figure \ref{fig:LeNet5_structure} shows the model structure of LeNet5, below is the seven layer of LeNet5:
     \begin{enumerate}
         \item C1 : Convolutional Layer : 
         \begin{itemize}
@@ -150,6 +150,14 @@ This assignment needs to use non-CNN-related packages such as numpy and SKLearn 
             \item output size : 1*10
         \end{itemize}         
     \end{enumerate}
+
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[width=0.45\textwidth]{LeNet5_structure.png}
+        \caption{LeNet5_structure}
+        \label{fig:LeNet5_structure}
+    \end{figure}
+    
     For MNIST dataset, All pictures are after gray scale, so the input channel would be 1, but for our dataset, the input channel would be 3. And for the final output of the model, because there are 50 different labels in our dataset, instead of 10 for MNIST.So we need to modify the model to let the model train on our data.
     
     \indent First, we have to change the input size of C1, which should be changed from 32*32*1 to 32*32*3, and for the final output size, it should become 1*50. The following are the changes in the dimention of the input data. $32*32*3 \rightarrow 28*28*6 \rightarrow 14*14*6 \rightarrow 16*10*10 \rightarrow  16*5*5 \rightarrow  1*120 \rightarrow 1*84 \rightarrow 1*50$
@@ -184,7 +192,7 @@ This assignment needs to use non-CNN-related packages such as numpy and SKLearn 
     \begin{equation}
         f'(x) = \sigma(x) * f(x) * \sigma(x)
     \end{equation}
-    Second, we have to change the kernel size of convolutional layer from 5 to 3, and add one more convolutional layer to the model.But because it would take too much for training on 256*256 figure, I reshaped the data into 32*32.Because the figure is too small, so I take away one of the pooling layer away. So the model structure would be like
+    Second, we have to change the kernel size of convolutional layer from 5 to 3, and add one more convolutional layer to the model.But because it would take too much for training on 256*256 figure, I reshaped the data into 32*32.Because the figure is too small, so I take away one of the pooling layer away. So the model structure are shown in figure \ref{fig:Improved_LeNet5_structure}, which would be like
     \begin{equation}
     \begin{aligned}
         C1 &: 32*32*3 \rightarrow 30*30*6 \\
@@ -199,7 +207,12 @@ This assignment needs to use non-CNN-related packages such as numpy and SKLearn 
         FC8 &: 1*84 \rightarrow 1*50
     \end{aligned}
     \end{equation}
-
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[width=0.45\textwidth]{Improved_LeNet5_structure.png}
+        \caption{Improved_LeNet5_structure}
+        \label{fig:Improved_LeNet5_structure}
+    \end{figure}
     \indent Originally, for LeNet5 and Improved LeNet5, it takes more than 2 hours to train one epoch, So I changed the forward and backward calculation of Conv and MaxPool, trying to accelarate the speed of training.Finally, it only take sixteen and twenty two minutes for one epoch, seperately.
     \indent And I discovered that the backward calculation of Conv in the source code didn't record the gradient of W and B so I plus the gradient in order to improve the result.
 
@@ -257,8 +270,8 @@ This assignment needs to use non-CNN-related packages such as numpy and SKLearn 
         \begin{tabular}{l|l|l}
                           &   Val    &   Test     \\ \hline
         \textbf{LeNet5}   &   0.1244   &  0.1178 \\ 
-        \textbf{LeNet5grad}   &   0.1644   &  0.1689 \\ 
-        \textbf{Improved} &   0.0689 &  0.0711 \\ 
+        \textbf{LeNet5grad}   &   0.0956   &  0.1689 \\ 
+        \textbf{Improved} &   0.0689 &  0.0978 \\ 
         \textbf{Improvedgrad} &   0.1644 &   0.1689 \\ 
     \end{tabular}
     \end{center}
